@@ -11,7 +11,7 @@
         }
 
         #container {
-            width: 800px;
+            width: 1200px;
             margin: auto;
             background-color: beige;
         }
@@ -22,6 +22,30 @@
 
         .error {
             color: red;
+        }
+        /* Style for the hidden table */
+        #feedbackTable {
+            display: none;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        #feedbackTable th,
+        #feedbackTable td {
+            font-family: 'Courier New', Courier, monospace;
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        #feedbackTable th {
+            background-color: #95bac4;
+        }
+        
+        /* Style for the visible table */
+        #feedbackTable.visible {
+            display: table;
         }
     </style>
 </head>
@@ -73,14 +97,23 @@
                 <option value="Facebook">Facebook</option>
                 <option value="Google">Google</option>
                 <option value="Yelp">Yelp</option>
-                <option value="Instagram">Instagram</option>
-                <option value="Tiktok">Tiktok</option>
             </select>
             <br><br>
 
             <label for="comments">Comments*:</label>
             <textarea name="text" id="comments" placeholder="Your comments" rows="5" cols="25" required></textarea>
             <span class="error" id="commentsError"></span>
+            <br><br>
+
+            <label for="Drink">Drink :</label>
+            <select name="Drink" id="Drink" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="Oleato">Oleato</option>
+                <option value="Hot Coffee">Hot Coffee</option>
+                <option value="Hot Tea">Hot Tea</option>
+                <option value="Iced Tea">Iced Tea</option>
+                <option value="Cold Drinks">Cold Drinks</option>
+            </select>
             <br><br>
 
             <!-- Dynamic checkboxes and text field -->
@@ -103,7 +136,8 @@
                 <th>Street Address 2</th>
                 <th>How did you hear</th>
                 <th>Comments</th>
-                <th>Additional Info</th>
+                <th>Drink</th>
+                <th>AdditionalInfo</th>
             </tr>
             </thead>
             <tbody>
@@ -207,8 +241,8 @@
     
 
     // Dynamic checkboxes and text field
-    document.getElementById('source').addEventListener('change', function () {
-        var source = document.getElementById('source').value;
+    document.getElementById('Drink').addEventListener('change', function () {
+        var Drink = document.getElementById('Drink').value;
         var checkboxContainer = document.getElementById('checkboxContainer');
         checkboxContainer.innerHTML = ''; // Clear previous checkboxes
         var checkbox = document.createElement('input');
@@ -216,11 +250,11 @@
         checkbox.name = 'additionalInfo';
         checkbox.id = 'additionalInfoCheckbox';
         checkboxContainer.appendChild(checkbox);
-        if (source === 'Facebook'|| source === 'Google'|| source === 'Yelp'|| source === 'Instagram'|| source === 'Tiktok') {
+        if (Drink === 'Oleato'|| Drink === 'Hot Coffee'|| Drink === 'Hot Tea'|| Drink === 'Iced Tea'|| Drink === 'Cold Drinks') {
 
             var dynamicElement = document.getElementById('dynamicElement');
             dynamicElement.innerHTML = '';
-            checkboxContainer.appendChild(document.createTextNode(source+' ID:'));
+            checkboxContainer.appendChild(document.createTextNode(Drink+' Name:'));
             checkbox.style.display = '';
             checkboxContainer.style.display = '';
             checkFormValidity();
@@ -250,6 +284,7 @@
         }
         checkFormValidity(); // Update submit button state
     });
+
 
     // Event listener for the streetAddress2 input field
     document.getElementById('streetAddress2').addEventListener('input', function () {
@@ -289,9 +324,10 @@
         newRow.insertCell(6).textContent = document.getElementById('streetAddress2').value || ''; // Handle street address 2
         newRow.insertCell(7).textContent = document.getElementById('source').value;
         newRow.insertCell(8).textContent = document.getElementById('comments').value;
+        newRow.insertCell(9).textContent = document.getElementById('Drink').value;
 
         // Additional info field if checkbox is checked
-        var additionalInfoCell = newRow.insertCell(9);
+        var additionalInfoCell = newRow.insertCell(10);
         if (document.getElementById('additionalInfoCheckbox') && document.getElementById('additionalInfoCheckbox').checked) {
             additionalInfoCell.textContent = document.getElementById('additionalInfoText').value;
         } else {
