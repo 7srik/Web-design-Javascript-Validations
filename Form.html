@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback</title>
+    <style>
+        label {
+            float: left;
+            width: 150px;
+        }
+
+        #container {
+            width: 800px;
+            margin: auto;
+            background-color: beige;
+        }
+
+        main {
+            padding: 50px;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <main>
+        <h2>Feedback</h2>
+        <h3>Love something? Hate something? Let us know!</h3>
+        Note: Fields marked with an asterisk(*) are mandatory
+        <br><br>
+        <form id="feedbackForm" method="post" novalidate>
+            <label>Title*:</label>
+            <input type="radio" name="title" id="miss" value="miss" required="required"/>Miss
+            <input type="radio" name="title" id="mr" value="mr" required="required"/>Mr.
+            <input type="radio" name="title" id="mrs" value="mrs" required="required"/>Mrs.
+            <br><br>
+            <label for="firstName">First Name*:</label>
+            <input type="text" name="firstName" id="firstName" placeholder="First Name" required/>
+            <span class="error" id="firstNameError"></span>
+            <br><br>
+
+            <label for="lastName">Last Name*:</label>
+            <input type="text" name="lastName" id="lastName" placeholder="Last Name" required/>
+            <span class="error" id="lastNameError"></span>
+            <br><br>
+
+            <label for="emailId">Email Id*:</label>
+            <input type="text" name="emailId" id="emailId" placeholder="yourname@domain.com" required/>
+            <span class="error" id="emailError"></span>
+            <br><br>
+
+            <label for="phoneNumber">Phone Number*:</label>
+            <input type="text" name="phoneNumber" id="phoneNumber" placeholder="xxx-xxx-xxxx" required/>
+            <span class="error" id="phoneError"></span>
+            <br><br>
+
+            <label for="zipcode">ZipCode*:</label>
+            <input type="text" name="zipcode" id="zipcode" placeholder="xxxxxx" required/>
+            <span class="error" id="zipError"></span>
+            <br><br>
+
+            <label for="streetAddress2">Street Address 2:</label>
+            <input type="text" name="streetAddress2" id="streetAddress2" placeholder="Street Address 2"/>
+            <br><br>
+
+            <label for="source">How did you hear*:</label>
+            <select name="source" id="source" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Google">Google</option>
+                <option value="Yelp">Yelp</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Tiktok">Tiktok</option>
+            </select>
+            <br><br>
+
+            <label for="comments">Comments*:</label>
+            <textarea name="text" id="comments" placeholder="Your comments" rows="5" cols="25" required></textarea>
+            <span class="error" id="commentsError"></span>
+            <br><br>
+
+            <!-- Dynamic checkboxes and text field -->
+            <div id="checkboxContainer"></div>
+            <div id="dynamicElement"></div>
+
+            <input type="Submit" id="submitButton" disabled>
+            <input type="Reset" id="resetButton">
+            <br><br>
+        </form>
+        <table id="feedbackTable" border="1" style="display: none;">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>ZipCode</th>
+                <th>Street Address 2</th>
+                <th>How did you hear</th>
+                <th>Comments</th>
+                <th>Additional Info</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </main>
+</div>
+
+<script>
+    // Validation functions
+    function validateEmail(email) {
+        var emailRegex = /^[A-Za-z0-9._%-]+@northeastern\.edu$/;
+        return emailRegex.test(email);
+    }
+
+    function validatePhone(phone) {
+        var phoneRegex = /^\d{3}-\d{3}-\d{4}$/;
+        return phoneRegex.test(phone);
+    }
+
+    function validateZipCode(zipcode) {
+        var zipRegex = /^\d{6}$/;
+        return zipRegex.test(zipcode);
+    }
+
+    
+
+    // Enable/disable submit button based on form validity
+    function checkFormValidity() {
+        var form = document.getElementById('feedbackForm');
+        var submitButton = document.getElementById('submitButton');
+
+        // Check for validation errors
+        var validationErrors = document.querySelectorAll('.error');
+        for (var i = 0; i < validationErrors.length; i++) {
+            if (validationErrors[i].textContent !== '') {
+                submitButton.disabled = true;
+                return;
+            }
+        }
+        
+
+        submitButton.disabled = !form.checkValidity();
+    }
+
+    // Event listeners for form fields
+    document.getElementById('firstName').addEventListener('input', function () {
+        var firstName = document.getElementById('firstName').value;
+        var firstNameError = document.getElementById('firstNameError');
+        if (firstName.length < 2 || firstName.length > 50) {
+            firstNameError.textContent = 'First name must be between 2 and 50 characters';
+        } else {
+            firstNameError.textContent = '';
+        }
+        checkFormValidity();
+    });
+
+    document.getElementById('lastName').addEventListener('input', function () {
+        var lastName = document.getElementById('lastName').value;
+        var lastNameError = document.getElementById('lastNameError');
+        if (lastName.length < 2 || lastName.length > 50) {
+            lastNameError.textContent = 'Last name must be between 2 and 50 characters';
+        } else {
+            lastNameError.textContent = '';
+        }
+        checkFormValidity();
+    });
+
+    document.getElementById('emailId').addEventListener('input', function () {
+        var email = document.getElementById('emailId').value;
+        var emailError = document.getElementById('emailError');
+        if (validateEmail(email)) {
+            emailError.textContent = '';
+        } else {
+            emailError.textContent = 'Invalid email format (only @northeastern.edu is allowed)';
+        }
+        checkFormValidity();
+    });
+
+    document.getElementById('phoneNumber').addEventListener('input', function () {
+        var phone = document.getElementById('phoneNumber').value;
+        var phoneError = document.getElementById('phoneError');
+        if (validatePhone(phone)) {
+            phoneError.textContent = '';
+        } else {
+            phoneError.textContent = 'Invalid phone format (xxx-xxx-xxxx)';
+        }
+        checkFormValidity();
+    });
+
+    document.getElementById('zipcode').addEventListener('input', function () {
+        var zipcode = document.getElementById('zipcode').value;
+        var zipError = document.getElementById('zipError');
+        if (validateZipCode(zipcode)) {
+            zipError.textContent = '';
+        } else {
+            zipError.textContent = 'Invalid zip code (6 digits)';
+        }
+        checkFormValidity();
+    });
+    
+
+    // Dynamic checkboxes and text field
+    document.getElementById('source').addEventListener('change', function () {
+        var source = document.getElementById('source').value;
+        var checkboxContainer = document.getElementById('checkboxContainer');
+        checkboxContainer.innerHTML = ''; // Clear previous checkboxes
+        var checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = 'additionalInfo';
+        checkbox.id = 'additionalInfoCheckbox';
+        checkboxContainer.appendChild(checkbox);
+        if (source === 'Facebook'|| source === 'Google'|| source === 'Yelp'|| source === 'Instagram'|| source === 'Tiktok') {
+
+            var dynamicElement = document.getElementById('dynamicElement');
+            dynamicElement.innerHTML = '';
+            checkboxContainer.appendChild(document.createTextNode(source+' ID:'));
+            checkbox.style.display = '';
+            checkboxContainer.style.display = '';
+            checkFormValidity();
+
+            // Event listener for the dynamic checkbox
+            checkbox.addEventListener('change', function () {
+                var dynamicElement = document.getElementById('dynamicElement');
+                if (checkbox.checked) {
+                    var inputField = document.createElement('input');
+                    inputField.type = 'text';
+                    inputField.name = 'additionalInfoText';
+                    inputField.id = 'additionalInfoText';
+                    inputField.placeholder = 'Additional Info';
+                    inputField.required = true;
+                    dynamicElement.appendChild(inputField);
+                    checkFormValidity();
+                } else {
+                    dynamicElement.innerHTML = ''; // Clear the dynamic element
+                    checkFormValidity();
+                }
+                checkFormValidity(); // Update submit button state
+            });
+        } else {
+            // Clear the dynamic element when a different option is selected
+            var dynamicElement = document.getElementById('dynamicElement');
+            dynamicElement.innerHTML = '';
+        }
+        checkFormValidity(); // Update submit button state
+    });
+
+    // Event listener for the streetAddress2 input field
+    document.getElementById('streetAddress2').addEventListener('input', function () {
+        checkFormValidity(); // Update submit button state
+    });
+
+    // Event listener for the reset button
+    document.getElementById('resetButton').addEventListener('click', function () {
+        var validationErrors = document.querySelectorAll('.error');
+        for (var i = 0; i < validationErrors.length; i++) {
+            validationErrors[i].textContent = '';
+        }
+        // Clear the additional info checkbox and text field
+        var checkbox = document.getElementById('additionalInfoCheckbox');
+        if (checkbox) {
+            checkbox.checked = false;
+        }
+        checkbox.style.display = 'none';
+        checkboxContainer.style.display = 'none';
+        var dynamicElement = document.getElementById('dynamicElement');
+        dynamicElement.innerHTML = '';
+
+    });
+
+    // Table creation on form submit
+    document.getElementById('feedbackForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        var table = document.getElementById('feedbackTable');
+        var tbody = table.getElementsByTagName('tbody')[0];
+        var newRow = tbody.insertRow();
+        newRow.insertCell(0).textContent = document.querySelector('input[name="title"]:checked').value;
+        newRow.insertCell(1).textContent = document.getElementById('firstName').value;
+        newRow.insertCell(2).textContent = document.getElementById('lastName').value;
+        newRow.insertCell(3).textContent = document.getElementById('emailId').value;
+        newRow.insertCell(4).textContent = document.getElementById('phoneNumber').value;
+        newRow.insertCell(5).textContent = document.getElementById('zipcode').value;
+        newRow.insertCell(6).textContent = document.getElementById('streetAddress2').value || ''; // Handle street address 2
+        newRow.insertCell(7).textContent = document.getElementById('source').value;
+        newRow.insertCell(8).textContent = document.getElementById('comments').value;
+
+        // Additional info field if checkbox is checked
+        var additionalInfoCell = newRow.insertCell(9);
+        if (document.getElementById('additionalInfoCheckbox') && document.getElementById('additionalInfoCheckbox').checked) {
+            additionalInfoCell.textContent = document.getElementById('additionalInfoText').value;
+        } else {
+            additionalInfoCell.textContent = '';
+        }
+        var dynamicElement = document.getElementById('dynamicElement');
+        dynamicElement.innerHTML = '';
+
+        // Clear the additional info checkbox and text field
+        var checkbox = document.getElementById('additionalInfoCheckbox');
+        if (checkbox) {
+            checkbox.checked = false;
+            checkbox.style.display = 'none'; // Hide the checkbox
+        }
+        var checkboxContainer = document.getElementById('checkboxContainer');
+        checkboxContainer.style.display = 'none'; // Hide the container
+
+        // Clear all form fields
+        document.getElementById('feedbackForm').reset();
+        checkFormValidity();
+        table.style.display = 'block';
+
+        
+    });
+</script>
+</body>
+</html>
